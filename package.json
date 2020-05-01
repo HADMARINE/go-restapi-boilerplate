@@ -1,0 +1,15 @@
+{
+  "name": "go-restapi-boilerplate",
+  "version": "0.1.0",
+  "main": "main.go",
+  "license": "MIT",
+  "scripts": {
+    "dev:watch": "gow -c run main.go",
+    "dev": "go run main.go",
+    "build": "go build -o ./dist/build",
+    "prod": "go build -o ./dist/build && ./dist/build"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
