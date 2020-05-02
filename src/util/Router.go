@@ -42,8 +42,9 @@ func response(context *gin.Context) customResponse {
 		if response["message"] == nil {
 			response["message"] = DefaultMessage(response["status"])
 		}
-
-		if response["result"] == nil {
+		if response["status"].(int) >= 400 {
+			response["result"] = false
+		} else {
 			response["result"] = true
 		}
 
@@ -54,3 +55,26 @@ func response(context *gin.Context) customResponse {
 		context.JSON(status, result)
 	}
 }
+
+// func errorHandler(context *gin.Context) customResponse {
+// 	return func(status int, response gin.H) {
+// 		result := make(gin.H);
+
+// 		if status == 0 {
+// 			response["status"] = 200
+// 		} else {
+// 			response["status"] = status
+// 		}
+
+// 		if response["code"] == nil {
+// 			response["code"] = DefaultCode(response["status"])
+// 		}
+
+// 		if response["message"] == nil {
+// 			response["message"] = DefaultMessage(response["status"])
+// 		}
+
+// 		response["result"] = false
+
+// 	}
+// }
