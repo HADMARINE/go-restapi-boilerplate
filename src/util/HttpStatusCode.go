@@ -4,8 +4,8 @@ import (
 	"strings"
 )
 
-// HttpStatusCode contains the HTTP status code data
-func HttpStatusCode() map[interface{}]string {
+// HTTPStatusCode contains the HTTP status code data
+func HTTPStatusCode() map[interface{}]string {
 	return map[interface{}]string{
 		100: "Continue",
 		101: "Switching Protocol",
@@ -34,10 +34,10 @@ func HttpStatusCode() map[interface{}]string {
 
 // DefaultCode returns default code
 func DefaultCode(status interface{}) string {
-	return strings.ToUpper(strings.ReplaceAll(HttpStatusCode()[status], " ", "_"))
+	return strings.ToUpper(strings.ReplaceAll(HTTPStatusCode()[status], " ", "_"))
 }
 
 // DefaultMessage return default message
 func DefaultMessage(status interface{}) string {
-	return HttpStatusCode()[status]
+	return HTTPStatusCode()[status]
 }
