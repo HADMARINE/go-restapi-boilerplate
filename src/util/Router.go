@@ -4,16 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RouterContextType contains RouterContext's method or contants
 type RouterContextType struct {
 	Response customResponse
 	Context  *gin.Context
-}
-
-type ResponseOptions struct {
-	result         bool
-	message        string
-	code           string
-	additionalData gin.H
 }
 
 type customResponse = func(status int, data gin.H)
@@ -55,26 +49,3 @@ func response(context *gin.Context) customResponse {
 		context.JSON(status, result)
 	}
 }
-
-// func errorHandler(context *gin.Context) customResponse {
-// 	return func(status int, response gin.H) {
-// 		result := make(gin.H);
-
-// 		if status == 0 {
-// 			response["status"] = 200
-// 		} else {
-// 			response["status"] = status
-// 		}
-
-// 		if response["code"] == nil {
-// 			response["code"] = DefaultCode(response["status"])
-// 		}
-
-// 		if response["message"] == nil {
-// 			response["message"] = DefaultMessage(response["status"])
-// 		}
-
-// 		response["result"] = false
-
-// 	}
-// }
