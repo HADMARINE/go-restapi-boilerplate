@@ -8,7 +8,6 @@ import (
 
 	"go-restapi-boilerplate/src/env"
 	"go-restapi-boilerplate/src/routes"
-	"go-restapi-boilerplate/src/world"
 )
 
 func main() {
@@ -29,13 +28,6 @@ func main() {
 	}))
 
 	routes.Route(router)
-	// router.GET("/", func(con *gin.Context) {
-	// 	con.JSON(http.StatusOK, gin.H{"result": true, "message": "ALIVE", "status": 200})
-	// })
-	// router.GET("/ping", func(con *gin.Context) {
-	// 	con.JSON(http.StatusOK, gin.H{"message": "pong"})
-	// })
-	world.Hello("world")
 
 	router.Run()
 }
