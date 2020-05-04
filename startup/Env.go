@@ -1,12 +1,12 @@
-package env
+package startup
 
 import (
-	"go-restapi-boilerplate/src/util"
+	"go-restapi-boilerplate/util"
 	"os"
 )
 
-// Init function sets env vars.
-func Init() {
+// Env function sets env vars.
+func Env() {
 	for key, value := range util.ReadJSON(".env.json") {
 		os.Setenv(key, value.(string))
 	}
