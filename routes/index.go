@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-restapi-boilerplate/src/util"
+	"go-restapi-boilerplate/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,13 +12,6 @@ func Route(router *gin.Engine) {
 		getIndex(util.RouterContext(con))
 	})
 
-}
-
-type ResponseOptions struct {
-	result         bool
-	message        string
-	code           string
-	additionalData gin.H
 }
 
 func getIndex(data util.RouterContextType) {

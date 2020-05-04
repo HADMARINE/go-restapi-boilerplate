@@ -12,6 +12,7 @@ func ReadJSON(filename string) map[string]interface{} {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
 	defer jsonFile.Close()
 
