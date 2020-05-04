@@ -1,6 +1,5 @@
-go-restapi-boilerplate
+# !!!CURRENTLY WORK IN PROGRESS!!!
 
-Must install:
-node
-go
-gow
+# GO-RestAPI-Boilerplate
+
+Must install: node go gow
