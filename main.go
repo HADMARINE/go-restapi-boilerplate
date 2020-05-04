@@ -6,14 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-restapi-boilerplate/src/env"
-	"go-restapi-boilerplate/src/routes"
+	"go-restapi-boilerplate/routes"
+	"go-restapi-boilerplate/startup"
 )
 
 func main() {
-	env.Init()
-	router := gin.New()
+	startup.Env()
+	startup.ConnectDB()
 
+	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("[%s]: %s %s - %d(%s) [%s %s %s]",
@@ -28,6 +29,5 @@ func main() {
 	}))
 
 	routes.Route(router)
-
 	router.Run()
 }
