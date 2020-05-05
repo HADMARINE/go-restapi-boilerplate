@@ -8,6 +8,7 @@ import (
 
 	"go-restapi-boilerplate/routes"
 	"go-restapi-boilerplate/startup"
+	"go-restapi-boilerplate/util"
 )
 
 func main() {
@@ -27,6 +28,13 @@ func main() {
 			param.Request.UserAgent(),
 			param.Request.Proto)
 	}))
+
+	result, err := util.HashPassword("helloworld")
+	if err == nil {
+		fmt.Println(result)
+	}
+	fmt.Println(util.VerifyPassword("helloworld", result))
+	fmt.Println(util.VerifyPassword("heLloworld", result))
 
 	routes.Route(router)
 	router.Run()
