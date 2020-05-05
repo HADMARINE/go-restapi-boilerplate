@@ -2,6 +2,8 @@ package startup
 
 import (
 	"fmt"
+	"go-restapi-boilerplate/db"
+	"go-restapi-boilerplate/models"
 	"os"
 	"strings"
 
@@ -26,11 +28,16 @@ func ConnectDB() {
 		DatabaseSource:   "admin",
 	}
 
-	_, connerr := mongodm.Connect(dbConfig)
+	conn, connerr := mongodm.Connect(dbConfig)
 	if connerr != nil {
 		fmt.Println("Database connection error :", connerr)
 		os.Exit(1)
 	}
+
+	conn.Register(&models.User{}, "users")
+
+	db.Database = conn
+
 }
 
 func checkEnv() dbEnvType {
