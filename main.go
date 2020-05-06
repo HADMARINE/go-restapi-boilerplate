@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/gin-gonic/gin"
 
+	"go-restapi-boilerplate/errors"
+	"go-restapi-boilerplate/middleware"
 	"go-restapi-boilerplate/routes"
 	"go-restapi-boilerplate/startup"
 	"go-restapi-boilerplate/util"
@@ -16,26 +15,22 @@ func main() {
 	startup.ConnectDB()
 
 	router := gin.New()
+
+	// Middlewares
 	router.Use(gin.Recovery())
-	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-		return fmt.Sprintf("[%s]: %s %s - %d(%s) [%s %s %s]",
-			param.TimeStamp.Format(time.RFC3339),
-			param.Method,
-			param.Path,
-			param.StatusCode,
-			param.Latency,
-			param.ClientIP,
-			param.Request.UserAgent(),
-			param.Request.Proto)
-	}))
+	router.Use(middleware.GinCustomLogger())
+	router.Use(middleware.GinCors())
+	router.Use(middleware.StaticFile())
 
-	result, err := util.HashPassword("helloworld")
-	if err == nil {
-		fmt.Println(result)
-	}
-	fmt.Println(util.VerifyPassword("helloworld", result))
-	fmt.Println(util.VerifyPassword("heLloworld", result))
+	// Middleware functions
+	middleware.Cron()
 
+	router.NoRoute(func(con *gin.Context) {
+		util.RouterContext(con).ErrorHandler(errors.PageNotFound())
+	})
+
+	// Routes
 	routes.Route(router)
+
 	router.Run()
 }
