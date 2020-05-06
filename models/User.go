@@ -10,6 +10,5 @@ type User struct {
 
 	Userid    string `json:"userid" bson:"userid"`
 	Password  string `json:"password" bson:"password"`
-	Enckey    string `json:"enckey" bson:"enckey"`
 	Authority string `json:"authority" bson:"authority"`
 }
