@@ -1,7 +1,8 @@
 package startup
 
 import (
-	"fmt"
+	"go-restapi-boilerplate/db"
+	"go-restapi-boilerplate/models"
 	"os"
 	"strings"
 
@@ -17,7 +18,7 @@ type dbEnvType struct {
 
 // ConnectDB connects database
 func ConnectDB() {
-	dbEnv := checkEnv()
+	dbEnv := checkDBEnv()
 	dbConfig := &mongodm.Config{
 		DatabaseHosts:    []string{dbEnv.dbhost},
 		DatabaseName:     dbEnv.dbname,
@@ -26,22 +27,25 @@ func ConnectDB() {
 		DatabaseSource:   "admin",
 	}
 
-	_, connerr := mongodm.Connect(dbConfig)
+	conn, connerr := mongodm.Connect(dbConfig)
 	if connerr != nil {
-		fmt.Println("Database connection error :", connerr)
-		os.Exit(1)
+		panic(connerr)
 	}
+
+	conn.Register(&models.User{}, "users")
+
+	db.Database = conn
+
 }
 
-func checkEnv() dbEnvType {
+func checkDBEnv() dbEnvType {
 	dbhost := os.Getenv("DB_HOST")
 	dbname := os.Getenv("DB_NAME")
 	dbuser := os.Getenv("DB_USER")
 	dbpass := os.Getenv("DB_PASS")
 
 	if len(strings.TrimSpace(dbhost)) == 0 || len(strings.TrimSpace(dbname)) == 0 || len(strings.TrimSpace(dbuser)) == 0 || len(strings.TrimSpace(dbpass)) == 0 {
-		fmt.Println("ENV Settings for connecting database is not provided, stopping...")
-		os.Exit(1)
+		panic("ENV Settings for connecting database is not provided, stopping...")
 	}
 
 	return dbEnvType{

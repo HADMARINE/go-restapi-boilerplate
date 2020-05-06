@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/gin-gonic/gin"
 
+	"go-restapi-boilerplate/errors"
+	"go-restapi-boilerplate/middleware"
 	"go-restapi-boilerplate/routes"
 	"go-restapi-boilerplate/startup"
+	"go-restapi-boilerplate/util"
 )
 
 func main() {
@@ -15,19 +15,22 @@ func main() {
 	startup.ConnectDB()
 
 	router := gin.New()
-	router.Use(gin.Recovery())
-	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-		return fmt.Sprintf("[%s]: %s %s - %d(%s) [%s %s %s]",
-			param.TimeStamp.Format(time.RFC3339),
-			param.Method,
-			param.Path,
-			param.StatusCode,
-			param.Latency,
-			param.ClientIP,
-			param.Request.UserAgent(),
-			param.Request.Proto)
-	}))
 
+	// Middlewares
+	router.Use(gin.Recovery())
+	router.Use(middleware.GinCustomLogger())
+	router.Use(middleware.GinCors())
+	router.Use(middleware.StaticFile())
+
+	// Middleware functions
+	middleware.Cron()
+
+	router.NoRoute(func(con *gin.Context) {
+		util.RouterContext(con).ErrorHandler(errors.PageNotFound())
+	})
+
+	// Routes
 	routes.Route(router)
+
 	router.Run()
 }
