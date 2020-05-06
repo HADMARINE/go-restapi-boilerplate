@@ -1,6 +1,7 @@
 package util
 
 import (
+	"go-restapi-boilerplate/errors"
 	"io"
 	"io/ioutil"
 
@@ -9,20 +10,24 @@ import (
 
 // RouterContextType contains RouterContext's method or contants
 type RouterContextType struct {
-	Response  customResponse
-	ParseBody func(io.ReadCloser) (map[string]interface{}, error)
-	Context   *gin.Context
+	Response     customResponse
+	ErrorHandler errorHandlerType
+	ParseBody    func(io.ReadCloser) (map[string]interface{}, error)
+	Context      *gin.Context
 }
 
 type customResponse = func(status int, data gin.H)
+type errorHandlerType = func(errors.ResponseError)
 
 // RouterContext provides customized context functions
 func RouterContext(context *gin.Context) RouterContextType {
 	customResponse := response(context)
+	errorHandler := errorResponse(context)
 	result := RouterContextType{
-		Response:  customResponse,
-		Context:   context,
-		ParseBody: parseBody,
+		Response:     customResponse,
+		ErrorHandler: errorHandler,
+		Context:      context,
+		ParseBody:    parseBody,
 	}
 	return result
 }
@@ -58,7 +63,12 @@ func response(context *gin.Context) customResponse {
 	}
 }
 
-// func errorHandler
+func errorResponse(context *gin.Context) func(errors.ResponseError) {
+	return func(errorData errors.ResponseError) {
+		result := gin.H{"status": errorData.Status, "message": errorData.Message, "code": errorData.Code, "result": false}
+		context.JSON(errorData.Status, result)
+	}
+}
 
 // Create error handler, make error type and get by parameters
 
